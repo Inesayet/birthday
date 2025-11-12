@@ -28,6 +28,7 @@
       justify-content: center;
       font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
       position: relative;
+      cursor: none;
     }
     
     body::before {
@@ -45,6 +46,37 @@
     @keyframes moonGlow {
       0%, 100% { background: rgba(0, 0, 0, 0.15); }
       50% { background: rgba(200, 200, 255, 0.08); }
+    }
+    
+    /* Custom cursor */
+    .custom-cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transition: all 0.1s ease;
+      mix-blend-mode: difference;
+    }
+    
+    .cursor-trail {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: rgba(200, 220, 255, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      animation: trailFade 0.8s ease-out forwards;
+    }
+    
+    @keyframes trailFade {
+      to {
+        opacity: 0;
+        transform: scale(0);
+      }
     }
     
     /* Floating stars effect */
@@ -67,11 +99,63 @@
       border-radius: 50%;
       animation: twinkle 3s infinite;
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+      transition: transform 0.1s ease-out;
     }
     
     @keyframes twinkle {
       0%, 100% { opacity: 0.3; transform: scale(1); }
       50% { opacity: 1; transform: scale(1.5); }
+    }
+    
+    /* Shooting stars */
+    .shooting-star {
+      position: fixed;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 4px 2px rgba(255, 255, 255, 0.8);
+      animation: shoot 2s ease-out forwards;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    @keyframes shoot {
+      0% {
+        transform: translateX(0) translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(300px) translateY(300px);
+        opacity: 0;
+      }
+    }
+    
+    /* Click particles */
+    .particle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, rgba(200, 220, 255, 0.8), transparent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10;
+      animation: particleFloat 6s ease-out forwards;
+    }
+    
+    @keyframes particleFloat {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0);
+      }
+      10% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx, 0), var(--ty, -100vh)) scale(0);
+      }
     }
     
     .card {
@@ -96,6 +180,16 @@
       position: relative;
       z-index: 1;
       animation: cardFloat 1.5s ease-in, breathe 6s ease-in-out infinite;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 
+        0 16px 48px 0 rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(200, 220, 255, 0.5),
+        0 0 100px rgba(150, 180, 255, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
     }
     
     @keyframes cardFloat {
@@ -135,6 +229,7 @@
         #ffffff 0%, 
         #E8F0FF 50%,
         #B8D4FF 100%);
+      background-size: 200% 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -147,6 +242,13 @@
       font-family: 'Playfair Display', 'Georgia', serif;
       animation: titleGlow 3s ease-in-out infinite;
       position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    
+    h1:hover {
+      transform: scale(1.05);
+      animation: titleShimmer 1s ease-in-out infinite;
     }
     
     @keyframes titleGlow {
@@ -160,24 +262,46 @@
       }
     }
     
-    h1::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 2px;
-      background: linear-gradient(90deg, 
-        transparent, 
-        rgba(200, 220, 255, 0.9), 
-        transparent);
-      animation: lineGlow 2s ease-in-out infinite;
+    @keyframes titleShimmer {
+      0%, 100% { 
+        background-position: 0% 50%; 
+        filter: brightness(1); 
+      }
+      50% { 
+        background-position: 100% 50%; 
+        filter: brightness(1.5); 
+      }
     }
     
-    @keyframes lineGlow {
-      0%, 100% { opacity: 0.5; width: 80px; }
-      50% { opacity: 1; width: 120px; }
+    h1::before {
+      content: '✨';
+      position: absolute;
+      left: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      animation: sparkle 2s ease-in-out infinite;
+    }
+    
+    h1::after {
+      content: '✨';
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      animation: sparkle 2s ease-in-out infinite 1s;
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { 
+        opacity: 0.4; 
+        transform: translateY(-50%) scale(1) rotate(0deg); 
+      }
+      50% { 
+        opacity: 1; 
+        transform: translateY(-50%) scale(1.5) rotate(180deg); 
+      }
     }
     
     .birthday-message {
@@ -197,6 +321,13 @@
     .birthday-message > * {
       opacity: 0;
       animation: fadeInLine 1s ease-in forwards;
+      transition: transform 0.3s ease, color 0.3s ease;
+      cursor: default;
+    }
+    
+    .birthday-message > *:hover {
+      transform: translateX(8px);
+      color: #E8F0FF;
     }
     
     .birthday-message > *:nth-child(1) { animation-delay: 0.5s; }
@@ -226,6 +357,7 @@
       background: linear-gradient(135deg, 
         #E8F0FF 0%, 
         #B8D4FF 100%);
+      background-size: 200% 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -242,13 +374,14 @@
       0%, 100% {
         filter: brightness(1);
         transform: scale(1);
+        background-position: 0% 50%;
       }
       50% {
         filter: brightness(1.3);
         transform: scale(1.03);
+        background-position: 100% 50%;
       }
     }
-    
     
     .footer {
       margin-top: 3rem;
@@ -263,6 +396,12 @@
       opacity: 0;
       animation: fadeInLine 1s ease-in 4s forwards;
       position: relative;
+      transition: transform 0.3s ease;
+      cursor: default;
+    }
+    
+    .footer:hover {
+      transform: scale(1.08);
     }
     
     .footer::before {
@@ -288,15 +427,73 @@
     }
     
     @keyframes starTwinkle {
-      0%, 100% { opacity: 0.4; transform: translateY(-50%) scale(1); }
-      50% { opacity: 1; transform: translateY(-50%) scale(1.3); }
+      0%, 100% { 
+        opacity: 0.4; 
+        transform: translateY(-50%) scale(1) rotate(0deg); 
+      }
+      50% { 
+        opacity: 1; 
+        transform: translateY(-50%) scale(1.3) rotate(180deg); 
+      }
+    }
+    
+    /* Click prompt */
+    .click-prompt {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      z-index: 100;
+      opacity: 0;
+      animation: promptFade 1s ease-in 4.5s forwards, promptPulse 2s ease-in-out infinite 5.5s;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+    
+    @keyframes promptFade {
+      to { opacity: 1; }
+    }
+    
+    @keyframes promptPulse {
+      0%, 100% { 
+        opacity: 0.7; 
+        transform: translateX(-50%) translateY(0); 
+      }
+      50% { 
+        opacity: 1; 
+        transform: translateX(-50%) translateY(-5px); 
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        cursor: auto;
+      }
+      .custom-cursor {
+        display: none;
+      }
+      h1::before, h1::after {
+        display: none;
+      }
+      .card {
+        padding: 3rem 2rem;
+      }
+      h1 {
+        font-size: 2.5rem;
+      }
+      .birthday-message {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="custom-cursor"></div>
   <div class="stars" id="stars"></div>
-  <div class="card">
-    <h1>Happy Birthday</h1>
+  <div class="card" id="card">
+    <h1 id="title">Happy Birthday</h1>
     <div class="birthday-message">
       <div>You are the moon who lights my life,</div>
       <div>casting your gentle radiance upon my world</div>
@@ -317,11 +514,47 @@
       Forever yours, under the same moon
     </div>
   </div>
+  <div class="click-prompt">Cliquez n'importe où pour créer de la magie ✨</div>
   
   <script>
-    // Create floating stars
+    // Custom cursor
+    const cursor = document.querySelector('.custom-cursor');
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    
+    function animateCursor() {
+      cursorX += (mouseX - cursorX) * 0.2;
+      cursorY += (mouseY - cursorY) * 0.2;
+      cursor.style.left = cursorX + 'px';
+      cursor.style.top = cursorY + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    
+    // Cursor trail
+    let lastTrailTime = 0;
+    document.addEventListener('mousemove', (e) => {
+      const now = Date.now();
+      if (now - lastTrailTime > 30) {
+        const trail = document.createElement('div');
+        trail.className = 'cursor-trail';
+        trail.style.left = e.clientX + 'px';
+        trail.style.top = e.clientY + 'px';
+        document.body.appendChild(trail);
+        setTimeout(() => trail.remove(), 800);
+        lastTrailTime = now;
+      }
+    });
+    
+    // Create floating stars with parallax
     const starsContainer = document.getElementById('stars');
     const numStars = 30;
+    const stars = [];
     
     for (let i = 0; i < numStars; i++) {
       const star = document.createElement('div');
@@ -331,7 +564,96 @@
       star.style.animationDelay = Math.random() * 3 + 's';
       star.style.animationDuration = (Math.random() * 2 + 2) + 's';
       starsContainer.appendChild(star);
+      stars.push({ element: star, speed: Math.random() * 0.3 + 0.1 });
     }
+    
+    // Parallax effect on stars
+    document.addEventListener('mousemove', (e) => {
+      const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+      const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+      
+      stars.forEach(star => {
+        const x = moveX * star.speed;
+        const y = moveY * star.speed;
+        star.element.style.transform = `translate(${x}px, ${y}px)`;
+      });
+    });
+    
+    // Shooting stars
+    function createShootingStar() {
+      const shootingStar = document.createElement('div');
+      shootingStar.className = 'shooting-star';
+      shootingStar.style.left = Math.random() * 50 + '%';
+      shootingStar.style.top = Math.random() * 50 + '%';
+      document.body.appendChild(shootingStar);
+      setTimeout(() => shootingStar.remove(), 2000);
+    }
+    
+    setInterval(createShootingStar, 4000);
+    
+    // Click particles effect
+    document.addEventListener('click', (e) => {
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = e.clientX + 'px';
+        particle.style.top = e.clientY + 'px';
+        
+        const angle = (Math.PI * 2 * i) / 15;
+        const distance = Math.random() * 100 + 50;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance - 100;
+        
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+        particle.style.animationDelay = (i * 0.05) + 's';
+        
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 6000);
+      }
+    });
+    
+    // Title click effect
+    const title = document.getElementById('title');
+    title.addEventListener('click', (e) => {
+      e.stopPropagation();
+      createShootingStar();
+      createShootingStar();
+      
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        const rect = title.getBoundingClientRect();
+        particle.style.left = (rect.left + rect.width / 2) + 'px';
+        particle.style.top = (rect.top + rect.height / 2) + 'px';
+        
+        const angle = (Math.PI * 2 * i) / 20;
+        const distance = Math.random() * 150 + 100;
+        particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+        particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+        
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 6000);
+      }
+    });
+    
+    // Card 3D tilt effect
+    const card = document.getElementById('card');
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 15;
+      const rotateY = (centerX - x) / 15;
+      
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-12px) scale(1.02)`;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
   </script>
 </body>
 </html>
